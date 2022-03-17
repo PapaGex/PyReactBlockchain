@@ -1,3 +1,5 @@
+from backend.util.crypto_hash import crypto_hash
+
 HEX_TO_BINARY_CONVERSION_TABLE = {
     '0': '0000',
     '1': '0001',
@@ -41,4 +43,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-}
