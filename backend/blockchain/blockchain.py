@@ -12,6 +12,21 @@ class Blockchain:
     def __repr__(self):
         return f'Blockchain: {self.chain}'
 
+    def replace_chain(self, chain):
+
+        if len(chain) <= len(self.chain):
+            raise Exception('Cannot replace. The incoming chain must be at least longer than the outgoing chain')
+
+        try:
+            Blockchain.is_valid_chain(chain)
+        except Exception as e:
+            raise Exception(f'Cannot replace. The incoming chain must be at least valid')
+
+        self.chain = chain
+
+    def to_json(self):
+        return list(map(lambda block: block.to_json(), self.chain))
+
     @staticmethod
     def is_valid_chain(chain):
         if chain[0] != Block.genesis():

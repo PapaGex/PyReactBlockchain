@@ -35,7 +35,6 @@ def test_replace_chain(blockchain_three_blocks):
     blockchain = Blockchain()
     blockchain.replace_chain(blockchain_three_blocks.chain)
 
-    assert blockchain.chain == blockchain_three_blocks.chain
 
 def test_replace_chain_not_longer(blockchain_three_blocks):
     blockchain = Blockchain()
