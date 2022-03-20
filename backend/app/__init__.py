@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify
 
 from backend.blockchain.blockchain import Blockchain
@@ -22,5 +24,10 @@ def route_blockchain_mine():
     blockchain.add_block(transaction_data)
 
     return jsonify(blockchain.chain[-1].to_json())
+
+PORT = 5005
+
+if os.environ.get('PEER') == 'True':
+
 
 app.run(port=5666)
