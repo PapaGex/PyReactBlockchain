@@ -1,3 +1,4 @@
+from backend.blockchain import block
 from backend.blockchain.block import Block
 
 
@@ -27,6 +28,14 @@ class Blockchain:
     def to_json(self):
         return list(map(lambda block: block.to_json(), self.chain))
 
+    @staticmethod
+    def from_json(chain_json):
+        blockchain = Blockchain()
+        blockchain.chain = list(
+            map(lambda block_json: Block.from_json(block_json), chain_json)
+        )
+
+        return blockchain
     @staticmethod
     def is_valid_chain(chain):
         if chain[0] != Block.genesis():

@@ -1,5 +1,5 @@
 import os
-
+import random
 from flask import Flask, jsonify
 
 from backend.blockchain.blockchain import Blockchain
@@ -7,7 +7,7 @@ from backend.pubsub import PubSub
 
 app = Flask(__name__)
 blockchain = Blockchain()
-pubsub = PubSub()
+pubsub = PubSub(blockchain)
 
 @app.route('/')
 def route_default():
@@ -23,11 +23,24 @@ def route_blockchain_mine():
 
     blockchain.add_block(transaction_data)
 
-    return jsonify(blockchain.chain[-1].to_json())
+    block = blockchain.chain[-1]
+    pubsub.broadcast_block(block)
 
-PORT = 5005
+    return jsonify(block.to_json())
+
+ROOT_PORT = 5000
+PORT = ROOT_PORT
 
 if os.environ.get('PEER') == 'True':
+    PORT = random.randint(5001, 6000)
 
+    results = requests.get(f'http://localhost:{ROOT_PORT}/blockchain')
+    result_blockchain = Blockchain.from_json(result.json())
 
-app.run(port=5666)
+    try:
+        blockchain.replace_chain(result_blockchain.chain)
+        print('\n -- Successfully synced local chain')
+    except Exception as e:
+        print(f'\n --- Error synchronizing: {e}')
+
+app.run(port=PORT)
